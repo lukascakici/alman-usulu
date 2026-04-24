@@ -1,26 +1,63 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Class-bazlı dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------
+   Sıcak palet — aydınlık mod KREM, karanlık mod KOYU KAHVE.
+   Tailwind'in white/black/neutral token'larını override ediyoruz;
+   tüm component'ler aynı class'ları (bg-white, dark:bg-black, vs.)
+   kullanmaya devam ederken renkler sıcak tonlara kayıyor.
+------------------------------------------------------------------- */
+@theme {
+  --color-white: #faf5e8;   /* sıcak krem — LIGHT zemin */
+  --color-black: #140d07;   /* derin espresso — DARK zemin */
+
+  --color-neutral-50:  #f3ecdb; /* LIGHT surface */
+  --color-neutral-100: #ecdfc3; /* LIGHT surface-2 */
+  --color-neutral-200: #ddcaa8; /* LIGHT border */
+  --color-neutral-300: #c4ad82; /* LIGHT border-strong */
+  --color-neutral-400: #9a8767; /* subtle text */
+  --color-neutral-500: #7a6a50; /* muted mid */
+  --color-neutral-600: #594734; /* LIGHT muted text */
+  --color-neutral-700: #3b2a1a; /* DARK border-strong */
+  --color-neutral-800: #281c11; /* DARK surface-2 */
+  --color-neutral-900: #1e1509; /* DARK surface + LIGHT primary text */
+  --color-neutral-950: #140d07; /* deepest */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: light dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+}
+
+/* Yatay scroll tab'lar için scrollbar gizle */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Number input oklarını gizle */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Search input clear butonunu sadeleştir */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }

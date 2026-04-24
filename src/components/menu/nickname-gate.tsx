@@ -6,6 +6,7 @@ import {
   reclaimClientSession,
   setClientDisplayName,
 } from "@/lib/modules/sessions/actions";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type Props = {
   tableLabel: string;
@@ -39,43 +40,48 @@ export function NicknameGate({ tableLabel, reclaimable }: Props) {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-neutral-50 px-6 py-8">
-      <div className="w-full max-w-sm bg-white rounded-2xl border border-neutral-200 shadow-sm p-6 space-y-5">
-        <div className="space-y-1 text-center">
-          <p className="text-[10px] uppercase tracking-widest text-neutral-500">
+    <main className="min-h-screen flex items-center justify-center bg-white dark:bg-black text-neutral-900 dark:text-neutral-50 px-6 py-10">
+      <div className="fixed top-5 right-5">
+        <ThemeToggle />
+      </div>
+      <div className="w-full max-w-sm space-y-8">
+        <div className="space-y-2 text-center">
+          <p className="text-[10px] uppercase tracking-[0.22em] text-neutral-400 dark:text-neutral-500 font-semibold">
             Masa {tableLabel}
           </p>
-          <h1 className="text-lg font-semibold text-neutral-900">Hoş geldin</h1>
-          <p className="text-sm text-neutral-600">
-            Masadakilerle siparişleri karıştırmamak için seni nasıl çağıralım?
+          <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-50 tracking-tight leading-none">
+            Hoş geldin
+          </h1>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 pt-1">
+            Masadaki siparişleri karıştırmamak için kendini nasıl tanıtırsın?
           </p>
         </div>
 
         {reclaimable.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-[11px] uppercase tracking-wide text-neutral-500">
+          <div className="space-y-3">
+            <p className="text-[10px] uppercase tracking-[0.16em] text-neutral-400 dark:text-neutral-500 font-semibold text-center">
               Daha önce buradaysan
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 justify-center">
               {reclaimable.map((r) => (
                 <button
                   key={r.id}
                   type="button"
                   onClick={() => reclaim(r.id)}
                   disabled={pending}
-                  className="px-3 py-1.5 rounded-full border border-neutral-300 text-sm text-neutral-800 hover:bg-neutral-100 disabled:opacity-50"
+                  className="px-4 py-2 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-sm font-semibold text-neutral-900 dark:text-neutral-50 hover:border-neutral-300 dark:hover:border-neutral-700 active:scale-95 disabled:opacity-50 transition"
                 >
                   {r.name}
                 </button>
               ))}
             </div>
-            <div className="relative py-2">
+            <div className="relative py-1">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-neutral-200" />
+                <div className="w-full border-t border-neutral-200 dark:border-neutral-800" />
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-white px-2 text-[11px] uppercase tracking-wide text-neutral-400">
-                  veya yeni
+                <span className="bg-white dark:bg-black px-3 text-[10px] uppercase tracking-[0.16em] text-neutral-400 dark:text-neutral-500 font-semibold">
+                  veya yeni isim
                 </span>
               </div>
             </div>
@@ -91,11 +97,11 @@ export function NicknameGate({ tableLabel, reclaimable }: Props) {
             maxLength={24}
             autoFocus
             placeholder="Örn. Ali"
-            className="w-full px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900"
+            className="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-900 dark:text-neutral-50 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:border-neutral-900 dark:focus:border-white"
           />
 
           {error && (
-            <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+            <p className="text-xs text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">
               {error}
             </p>
           )}
@@ -103,7 +109,7 @@ export function NicknameGate({ tableLabel, reclaimable }: Props) {
           <button
             type="submit"
             disabled={pending}
-            className="w-full py-2.5 rounded-lg bg-neutral-900 text-white text-sm font-medium disabled:bg-neutral-400"
+            className="w-full py-3.5 rounded-2xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-bold active:scale-[0.99] hover:opacity-95 disabled:opacity-50 transition"
           >
             {pending ? "Kaydediliyor…" : "Devam"}
           </button>

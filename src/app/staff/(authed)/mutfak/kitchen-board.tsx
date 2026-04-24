@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
+import { Check, X } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import type { KitchenItem, KitchenTable } from "@/lib/modules/kitchen/queries";
 import type { OrderItemStatus } from "@/lib/modules/orders/queries";
 import { updateOrderItemStatus } from "@/lib/modules/kitchen/actions";
+import { cn } from "@/lib/utils/cn";
 
 type Props = {
   branchId: string;
@@ -133,20 +135,20 @@ export function KitchenBoard({
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-4 space-y-3">
+    <div className="max-w-6xl mx-auto px-5 py-5 space-y-4">
       {error && (
-        <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+        <p className="text-xs text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">
           {error}
         </p>
       )}
 
       {groupedTables.length === 0 && (
-        <p className="text-sm text-neutral-500 text-center py-16">
-          Aktif sipariş yok.
-        </p>
+        <div className="py-20 text-center">
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">Aktif sipariş yok.</p>
+        </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {groupedTables.map((tbl) => (
           <TableCard
             key={tbl.tableSessionId}
@@ -181,26 +183,37 @@ function TableCard({
 
   return (
     <section
-      className={`bg-white rounded-xl border ${urgent ? "border-red-200" : "border-neutral-200"} overflow-hidden`}
+      className={cn(
+        "bg-neutral-50 dark:bg-neutral-900 rounded-2xl border overflow-hidden",
+        urgent ? "border-red-500/40" : "border-neutral-200 dark:border-neutral-800",
+      )}
     >
       <header
-        className={`px-3 py-2 flex items-baseline justify-between ${urgent ? "bg-red-50" : "bg-neutral-50"} border-b ${urgent ? "border-red-200" : "border-neutral-200"}`}
+        className={cn(
+          "px-4 py-3 flex items-center justify-between border-b",
+          urgent
+            ? "bg-red-500/10 border-red-500/20"
+            : "bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-800",
+        )}
       >
         <div className="flex items-baseline gap-2">
-          <span className="text-[10px] uppercase tracking-wide text-neutral-500">
+          <span className="text-[10px] uppercase tracking-[0.16em] text-neutral-400 dark:text-neutral-500 font-semibold">
             Masa
           </span>
-          <span className="text-sm font-semibold text-neutral-900">
+          <span className="text-base font-bold text-neutral-900 dark:text-neutral-50 tracking-tight">
             {table.tableLabel}
           </span>
         </div>
         <span
-          className={`text-[11px] tabular-nums ${urgent ? "text-red-700 font-medium" : "text-neutral-500"}`}
+          className={cn(
+            "text-xs tabular-nums font-semibold",
+            urgent ? "text-red-600 dark:text-red-400" : "text-neutral-600 dark:text-neutral-400",
+          )}
         >
-          {oldestMin}dk
+          {oldestMin} dk
         </span>
       </header>
-      <ul className="divide-y divide-neutral-100">
+      <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
         {table.items.map((item) => (
           <ItemRow
             key={item.id}
@@ -229,36 +242,36 @@ function ItemRow({
   onAct: (itemId: string, to: "served" | "cancelled") => void;
 }) {
   return (
-    <li className="p-3">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex-1 min-w-0">
-          <p className="text-[11px] text-neutral-500">
-            {displayName ?? "bilinmeyen"}
-          </p>
-          <p className="text-sm font-medium text-neutral-900">
-            {item.qty}× {item.name_snapshot}
-          </p>
-          {item.notes && (
-            <p className="text-xs text-neutral-600 mt-0.5 italic">“{item.notes}”</p>
-          )}
-        </div>
+    <li className="p-4 space-y-2.5">
+      <div>
+        <p className="text-[11px] uppercase tracking-[0.12em] text-neutral-400 dark:text-neutral-500 font-semibold">
+          {displayName ?? "bilinmeyen"}
+        </p>
+        <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-50 mt-0.5">
+          <span className="tabular-nums">{item.qty}×</span> {item.name_snapshot}
+        </p>
+        {item.notes && (
+          <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 italic">“{item.notes}”</p>
+        )}
       </div>
-      <div className="mt-2 flex gap-1.5">
+      <div className="flex gap-2">
         <button
           type="button"
           disabled={disabled}
           onClick={() => onAct(item.id, "served")}
-          className="flex-1 text-xs font-medium bg-neutral-900 text-white rounded-md py-1.5 disabled:bg-neutral-400"
+          className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-xl py-2.5 active:scale-[0.98] hover:opacity-95 disabled:opacity-50 transition"
         >
+          <Check className="w-3.5 h-3.5" strokeWidth={2.75} />
           Verildi
         </button>
         <button
           type="button"
           disabled={disabled}
           onClick={() => onAct(item.id, "cancelled")}
-          className="text-xs text-red-600 border border-red-200 rounded-md px-2 py-1.5 disabled:opacity-50"
+          className="px-3 grid place-items-center text-red-600 dark:text-red-400 border border-neutral-200 dark:border-neutral-800 hover:border-red-500/50 rounded-xl active:scale-95 disabled:opacity-50 transition"
+          aria-label="İptal"
         >
-          İptal
+          <X className="w-4 h-4" strokeWidth={2.5} />
         </button>
       </div>
     </li>

@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Search, X } from "lucide-react";
 import type { MenuCategory } from "@/lib/modules/menu/queries";
 import { MenuItemCard } from "./menu-item-card";
 import { cn } from "@/lib/utils/cn";
 
-const SCROLL_OFFSET = 120; // sticky header (~56) + category nav (~48) + pay
+const SCROLL_OFFSET = 150;
 
 export function CustomerMenu({ categories }: { categories: MenuCategory[] }) {
   const [query, setQuery] = useState("");
@@ -14,7 +15,6 @@ export function CustomerMenu({ categories }: { categories: MenuCategory[] }) {
 
   const trimmed = query.trim().toLowerCase();
 
-  // Arama filtresi — boş ise tüm kategoriler; aksi halde kategori içi item filtrele
   const filteredCategories = useMemo(() => {
     if (!trimmed) return categories;
     return categories
@@ -29,9 +29,8 @@ export function CustomerMenu({ categories }: { categories: MenuCategory[] }) {
       .filter((c) => c.items.length > 0);
   }, [categories, trimmed]);
 
-  // IntersectionObserver ile aktif kategoriyi takip et (arama yoksa)
   useEffect(() => {
-    if (trimmed) return; // arama aktifken tab highlight'a karışma
+    if (trimmed) return;
     const sections = categories
       .map((c) => document.getElementById(`cat-${c.id}`))
       .filter(Boolean) as HTMLElement[];
@@ -39,7 +38,6 @@ export function CustomerMenu({ categories }: { categories: MenuCategory[] }) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Ekranın üst yarısında olan ilk section'ı aktif kabul et
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
@@ -62,27 +60,44 @@ export function CustomerMenu({ categories }: { categories: MenuCategory[] }) {
 
   return (
     <div ref={containerRef}>
-      <div className="sticky top-[56px] z-10 bg-neutral-50/95 backdrop-blur supports-[backdrop-filter]:bg-neutral-50/80 border-b border-neutral-200">
-        <div className="max-w-2xl mx-auto px-4 py-2 space-y-2">
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Menüde ara…"
-            className="w-full px-3 py-1.5 rounded-lg border border-neutral-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900"
-          />
+      <div className="sticky top-[73px] z-10 bg-white/90 dark:bg-black/90 backdrop-blur supports-[backdrop-filter]:bg-white/75 dark:bg-black/75 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="max-w-2xl mx-auto px-5 py-3 space-y-3">
+          <div className="relative">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 dark:text-neutral-500 pointer-events-none"
+              strokeWidth={2.25}
+            />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Menüde ara"
+              className="w-full pl-10 pr-10 py-2.5 rounded-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-900 dark:text-neutral-50 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:border-neutral-900 dark:focus:border-white"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label="Temizle"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 grid place-items-center rounded-full text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
+                <X className="w-3.5 h-3.5" strokeWidth={2.5} />
+              </button>
+            )}
+          </div>
+
           {!trimmed && categories.length > 1 && (
-            <nav className="flex gap-1.5 overflow-x-auto -mx-1 px-1 scrollbar-none">
+            <nav className="flex gap-2 overflow-x-auto scrollbar-none -mx-1 px-1">
               {categories.map((c) => (
                 <button
                   key={c.id}
                   type="button"
                   onClick={() => scrollToCat(c.id)}
                   className={cn(
-                    "shrink-0 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition",
+                    "shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition border",
                     activeCat === c.id
-                      ? "bg-neutral-900 text-white"
-                      : "bg-white border border-neutral-200 text-neutral-700 hover:bg-neutral-100",
+                      ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 border-neutral-900 dark:border-white"
+                      : "bg-transparent text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-50 hover:border-neutral-300 dark:hover:border-neutral-700",
                   )}
                 >
                   {c.name}
@@ -93,20 +108,31 @@ export function CustomerMenu({ categories }: { categories: MenuCategory[] }) {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 pt-4 space-y-6">
+      <div className="max-w-2xl mx-auto px-5 pt-6 space-y-8">
         {trimmed && filteredCategories.length === 0 && (
-          <p className="text-sm text-neutral-500 text-center py-8">
-            Aramanızla eşleşen ürün yok.
-          </p>
+          <div className="py-16 text-center">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              <span className="font-medium text-neutral-900 dark:text-neutral-50">&ldquo;{query}&rdquo;</span> ile
+              eşleşen ürün yok.
+            </p>
+          </div>
         )}
 
         {filteredCategories.map((category) => (
-          <section key={category.id} id={`cat-${category.id}`} className="space-y-2 scroll-mt-32">
-            <h2 className="text-base font-semibold text-neutral-900">{category.name}</h2>
-            {category.description && (
-              <p className="text-xs text-neutral-500">{category.description}</p>
-            )}
-            <ul className="divide-y divide-neutral-200 bg-white rounded-xl border border-neutral-200 overflow-hidden">
+          <section
+            key={category.id}
+            id={`cat-${category.id}`}
+            className="space-y-3 scroll-mt-36"
+          >
+            <div>
+              <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-50 tracking-tight">
+                {category.name}
+              </h2>
+              {category.description && (
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">{category.description}</p>
+              )}
+            </div>
+            <ul className="divide-y divide-neutral-200 dark:divide-neutral-800 bg-neutral-50 dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden">
               {category.items.map((item) => (
                 <MenuItemCard
                   key={item.id}
@@ -118,7 +144,9 @@ export function CustomerMenu({ categories }: { categories: MenuCategory[] }) {
                 />
               ))}
               {category.items.length === 0 && (
-                <li className="p-4 text-xs text-neutral-400 italic">Bu kategoride ürün yok.</li>
+                <li className="p-5 text-xs text-neutral-400 dark:text-neutral-500 italic">
+                  Bu kategoride ürün yok.
+                </li>
               )}
             </ul>
           </section>

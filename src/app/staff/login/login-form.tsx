@@ -22,7 +22,6 @@ export function LoginForm() {
         setError(null);
         start(async () => {
           const res = await signInAction(fd);
-          // Başarı durumunda signInAction redirect fırlatır; buraya dönmez.
           if (res?.error) setError(res.error);
         });
       }}
@@ -30,8 +29,11 @@ export function LoginForm() {
     >
       <input type="hidden" name="next" value={next} />
 
-      <div className="space-y-1">
-        <label htmlFor="email" className="text-xs font-medium text-neutral-700 uppercase tracking-wide">
+      <div className="space-y-1.5">
+        <label
+          htmlFor="email"
+          className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-[0.16em]"
+        >
           E-posta
         </label>
         <input
@@ -40,12 +42,15 @@ export function LoginForm() {
           type="email"
           required
           autoComplete="email"
-          className="w-full px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900"
+          className="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-900 dark:text-neutral-50 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:border-neutral-900 dark:focus:border-white"
         />
       </div>
 
-      <div className="space-y-1">
-        <label htmlFor="password" className="text-xs font-medium text-neutral-700 uppercase tracking-wide">
+      <div className="space-y-1.5">
+        <label
+          htmlFor="password"
+          className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-[0.16em]"
+        >
           Şifre
         </label>
         <input
@@ -54,12 +59,12 @@ export function LoginForm() {
           type="password"
           required
           autoComplete="current-password"
-          className="w-full px-3 py-2 rounded-lg border border-neutral-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900"
+          className="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-900 dark:text-neutral-50 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:border-neutral-900 dark:focus:border-white"
         />
       </div>
 
       {error && (
-        <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+        <p className="text-xs text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">
           {error}
         </p>
       )}
@@ -67,7 +72,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="w-full py-2.5 rounded-lg bg-neutral-900 text-white text-sm font-medium disabled:bg-neutral-400"
+        className="w-full py-3.5 rounded-2xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-bold active:scale-[0.99] hover:opacity-95 disabled:opacity-50 transition"
       >
         {pending ? "Giriş yapılıyor…" : "Giriş Yap"}
       </button>

@@ -8,6 +8,7 @@ import { CartProvider } from "@/components/menu/cart-provider";
 import { CartDrawer } from "@/components/menu/cart-drawer";
 import { CustomerMenu } from "@/components/menu/customer-menu";
 import { NicknameGate } from "@/components/menu/nickname-gate";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const dynamic = "force-dynamic";
 
@@ -42,26 +43,28 @@ export default async function CustomerTablePage() {
 
   return (
     <CartProvider tableSessionId={session.tableSessionId}>
-      <main className="min-h-screen bg-neutral-50 pb-28">
-        <header className="sticky top-0 z-20 bg-white border-b border-neutral-200">
-          <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div>
-              <p className="text-xs text-neutral-500 uppercase tracking-wide">Masa</p>
-              <h1 className="text-lg font-semibold text-neutral-900">{session.tableLabel}</h1>
+      <main className="min-h-screen bg-white dark:bg-black text-neutral-900 dark:text-neutral-50 pb-32">
+        <header className="sticky top-0 z-20 bg-white/90 dark:bg-black/90 backdrop-blur supports-[backdrop-filter]:bg-white/75 dark:bg-black/75 border-b border-neutral-200 dark:border-neutral-800">
+          <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 dark:text-neutral-500 font-medium">
+                Masa
+              </p>
+              <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-50 tracking-tight leading-none mt-1">
+                {session.tableLabel}
+              </h1>
             </div>
-            <div className="text-right">
-              <p className="text-xs text-neutral-500">
-                {session.clientDisplayName ?? "Sen"}
-              </p>
-              <p className="text-xs font-mono text-neutral-500">
-                {session.tableSessionId.slice(0, 8)}
-              </p>
+            <div className="flex items-center gap-2">
+              <div className="px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50 text-xs font-medium">
+                {session.clientDisplayName}
+              </div>
+              <ThemeToggle />
             </div>
           </div>
         </header>
 
         {menu.length === 0 ? (
-          <p className="max-w-2xl mx-auto px-4 pt-4 text-sm text-neutral-600">
+          <p className="max-w-2xl mx-auto px-5 pt-8 text-sm text-neutral-600 dark:text-neutral-400">
             Bu şube için aktif menü bulunamadı.
           </p>
         ) : (

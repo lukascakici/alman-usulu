@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
 import { signOutAction } from "./actions";
 
 export function SignOutButton() {
@@ -19,9 +20,10 @@ export function SignOutButton() {
           router.refresh();
         })
       }
-      className="text-xs text-neutral-500 hover:text-neutral-900 disabled:opacity-50"
+      aria-label="Çıkış"
+      className="w-9 h-9 grid place-items-center rounded-full border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition disabled:opacity-50"
     >
-      {pending ? "Çıkılıyor…" : "Çıkış"}
+      <LogOut className="w-4 h-4" strokeWidth={2.25} />
     </button>
   );
 }

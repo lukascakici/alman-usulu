@@ -24,10 +24,10 @@ export function StaffNav({ role }: { role: string }) {
             key={t.href}
             href={t.href}
             className={cn(
-              "px-3 py-1.5 rounded-lg text-sm font-medium transition",
+              "px-3 py-1.5 rounded-full text-sm font-semibold transition",
               active
-                ? "bg-neutral-900 text-white"
-                : "text-neutral-600 hover:bg-neutral-100",
+                ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900"
+                : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-50",
             )}
           >
             {t.label}

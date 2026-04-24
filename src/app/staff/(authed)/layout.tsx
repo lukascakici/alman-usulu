@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentStaff } from "@/lib/modules/staff/current";
 import { StaffNav } from "./staff-nav";
 import { SignOutButton } from "./sign-out-button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const dynamic = "force-dynamic";
 
@@ -11,32 +12,31 @@ export default async function StaffAuthedLayout({
   children: React.ReactNode;
 }) {
   const staff = await getCurrentStaff();
-
-  if (!staff) {
-    // Middleware normalde redirect eder; profili olmayan auth user için fallback.
-    redirect("/staff/login");
-  }
+  if (!staff) redirect("/staff/login");
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-50">
-      <header className="bg-white border-b border-neutral-200">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div>
-              <p className="text-[10px] uppercase tracking-widest text-neutral-500">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-black text-neutral-900 dark:text-neutral-50">
+      <header className="sticky top-0 z-20 bg-white/90 dark:bg-black/90 backdrop-blur supports-[backdrop-filter]:bg-white/75 dark:bg-black/75 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-5 min-w-0">
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-neutral-400 dark:text-neutral-500 font-semibold">
                 Alman Usulü
               </p>
-              <p className="text-sm font-semibold text-neutral-900">Personel</p>
+              <p className="text-sm font-bold text-neutral-900 dark:text-neutral-50 tracking-tight">Personel</p>
             </div>
             <StaffNav role={staff.role} />
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <p className="text-sm font-medium text-neutral-900">{staff.fullName}</p>
-              <p className="text-[11px] text-neutral-500 uppercase tracking-wide">
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="text-right hidden sm:block">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-50 leading-tight">
+                {staff.fullName}
+              </p>
+              <p className="text-[10px] text-neutral-400 dark:text-neutral-500 uppercase tracking-[0.12em]">
                 {staff.role}
               </p>
             </div>
+            <ThemeToggle />
             <SignOutButton />
           </div>
         </div>
