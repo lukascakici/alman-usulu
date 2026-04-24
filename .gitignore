@@ -1,0 +1,63 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (.env.example commit ediliyor, diğerleri ignored)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# supabase
+/supabase/.branches
+/supabase/.temp
+/supabase/.env
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+AGENTS.md
+CLAUDE.md
+.claude/settings.local.json
+supabase/seed.sql
+docs/adr/0001-architecture-decisions.md
+
+# private menu migrations
+supabase/migrations/20260424225000_krok_coffee_menu.sql
+supabase/migrations/20260424230000_menu_images_local.sql
+supabase/migrations/20260424231000_cafe_full_menu.sql
